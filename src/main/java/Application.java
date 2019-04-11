@@ -1,16 +1,19 @@
 import edu.uci.ics.jung.algorithms.layout.CircleLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
+import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import edu.uci.ics.jung.graph.Graph;
-import edu.uci.ics.jung.graph.SparseMultigraph;
 import edu.uci.ics.jung.graph.util.EdgeType;
-import edu.uci.ics.jung.visualization.BasicVisualizationServer;
-import edu.uci.ics.jung.visualization.Layer;
+import edu.uci.ics.jung.visualization.VisualizationImageServer;
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 import edu.uci.ics.jung.visualization.renderers.Renderer;
 
-import javax.swing.*;
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.Date;
 
 public class Application {
 
@@ -37,30 +40,16 @@ public class Application {
         network.addEdge(fourToTwo);
         network.addEdge(fourToFive);
 
-        display(network);
-
-        System.out.println(String.format("Maximum flow of network is %.2f.",
-                new MaximumFlow().of(network, 0, 5)));
+        exportNetworkToFile(network, "before");
+        new MaximumFlow().of(network, 0, 5);
+        exportNetworkToFile(network, "after");
 
     }
 
-    public static void display(Network network){
+    public static void exportNetworkToFile(Network network, String title){
 
-//        for (int i=0; i<network.getNoOfVertices(); i++) {
-//
-//            System.out.printf("----- VERTEX %d -----\n\n", i);
-//
-//            Iterator<Edge> iterator = network.adj(i).iterator();
-//            while(iterator.hasNext()){
-//                Edge edge = iterator.next();
-//                System.out.printf("Edge incident from %d to %d with capacity of %.2f.\n",edge.getFrom(), edge.getFrom(), edge.getCapacity());
-//            }
-//
-//            System.out.println();
-//
-//        }
+        Graph<Integer, Edge> graph = new DirectedSparseGraph<>();
 
-        SparseMultigraph<Integer, Edge> graph = new SparseMultigraph();
         for(int i=0; i<network.getNoOfVertices(); i++){
             graph.addVertex(i);
             for(Edge edge: network.getAdj()[i]){
@@ -68,29 +57,31 @@ public class Application {
             }
         }
 
-        System.out.println(graph.toString());
-
         Layout<Integer, String> layout = new CircleLayout(graph);
         layout.setSize(new Dimension(500,500)); // sets the initial size of the space
         // The BasicVisualizationServer<V,E> is parameterized by the edge types
-        BasicVisualizationServer<Integer,String> vv =
-                new BasicVisualizationServer<>(layout);
-        vv.setPreferredSize(new Dimension(500,500)); //Sets the viewing area size
+        VisualizationImageServer<Integer,String> vis =
+                new VisualizationImageServer<>(layout, layout.getSize());
+        vis.setPreferredSize(new Dimension(500,500)); //Sets the viewing area size
+        vis.getRenderContext().setVertexLabelTransformer(new ToStringLabeller());
+        vis.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller<>());
+        vis.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.CNTR);
 
-        vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller());
-        vv.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller<>());
-        vv.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.CNTR);
+        BufferedImage image = (BufferedImage) vis.getImage(
+                new Point2D.Double(vis.getGraphLayout().getSize().getWidth() / 2,
+                        vis.getGraphLayout().getSize().getHeight() / 2),
+                new Dimension(vis.getGraphLayout().getSize()));
 
-        // Rotating the layout such that nodes are laid out from L to R
-        Dimension d = layout.getSize();
-        Point2D center = new Point2D.Double(d.width/2, d.height/2);
-        vv.getRenderContext().getMultiLayerTransformer().getTransformer(Layer.LAYOUT).rotate(-Math.PI, center);
+        File outputfile = new File(String.format("network_output\\%s_network_%s.png",title, new Date().toString().replaceAll("[\\:\\s]","").trim()));
+        outputfile.getParentFile().mkdirs();
 
-        JFrame frame = new JFrame("Maximum Flow Network - Ihan Dilnath");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().add(vv);
-        frame.pack();
-        frame.setVisible(true);
+        try {
+            ImageIO.write(image, "png", outputfile);
+        } catch (IOException e) {
+            // Exception handling
+        }
+
+
 
     }
 
