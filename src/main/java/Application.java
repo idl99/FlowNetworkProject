@@ -11,7 +11,6 @@ import edu.uci.ics.jung.visualization.renderers.Renderer;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Point2D;
-import java.util.Iterator;
 
 public class Application {
 
@@ -61,11 +60,11 @@ public class Application {
 //
 //        }
 
-        Graph<Integer, Edge> graph = new SparseMultigraph();
+        SparseMultigraph<Integer, Edge> graph = new SparseMultigraph();
         for(int i=0; i<network.getNoOfVertices(); i++){
             graph.addVertex(i);
             for(Edge edge: network.getAdj()[i]){
-                ((SparseMultigraph<Integer, Edge>) graph).addEdge(edge, edge.getFrom(), edge.getTo(), EdgeType.DIRECTED);
+                graph.addEdge(edge, edge.getFrom(), edge.getTo(), EdgeType.DIRECTED);
             }
         }
 
@@ -75,7 +74,7 @@ public class Application {
         layout.setSize(new Dimension(500,500)); // sets the initial size of the space
         // The BasicVisualizationServer<V,E> is parameterized by the edge types
         BasicVisualizationServer<Integer,String> vv =
-                new BasicVisualizationServer<Integer,String>(layout);
+                new BasicVisualizationServer<>(layout);
         vv.setPreferredSize(new Dimension(500,500)); //Sets the viewing area size
 
         vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller());
