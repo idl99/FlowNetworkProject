@@ -7,13 +7,9 @@ public class MaximumFlow {
     private Edge[] edgeTo;
     private double value;
 
-    public MaximumFlow(){
-
-    }
-
     public double of(Network network, int source, int sink){
         value = 0.0;
-        while(hasAugmentingPath(network,source,sink)){
+        while(hasAugmentingPath(network,source,sink)){ // C - sum of capacity from all edge outgoing from source
 
             double bottle_neck = Double.POSITIVE_INFINITY;
 
@@ -40,6 +36,8 @@ public class MaximumFlow {
         queue.add(source);
         visited[source] = true;
         while(!queue.isEmpty()){
+
+            // Breadth first search algorithm O(V+E)
 
             int v = ((LinkedList<Integer>) queue).poll();
 
