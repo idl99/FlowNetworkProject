@@ -59,24 +59,25 @@ public class Application {
                 "==================================================\n" +
                 "MAXIMUM FLOW NETWORK by Ihan Dilnath - W1673607\n" +
                 "5SENG002 - ALGORITHMS: THEORY, DESIGN AND IMPLEMENTATION\n" +
-                "\n" +
-                "Please enter the number of vertices in your flow network: ");
+                "\n");
 
         int V = 0;
         do{
+            System.out.print("Please enter the number of vertices in your flow network: ");
             try {
                 V = sc.nextInt();
-                if(V == 0){
+                if(V <= 0){
                     throw new Exception("No. of Vertices (V) cannot be zero. Please enter a correct value again.");
                 }
             } catch (InputMismatchException e) {
-                System.out.println("Please enter ");
+                System.out.println("Please enter numerical value only.");
+                sc.nextLine();
                 continue;
             } catch (Exception e){
                 System.out.println(e.getMessage());
                 continue;
             }
-        }while(V == 0);
+        }while(V <= 0);
 
         System.out.println();
 
@@ -86,50 +87,67 @@ public class Application {
         int to;
         double capacity;
         do{
-            System.out.print(String.format("Enter the number of vertex from 0 to %d (inclusive) from which the edge originates: ", V-1));
-            try {
-                from = sc.nextInt();
-                if (from < 0 || from >= V) {
-                    throw new Exception("No. of vertex entered is invalid. Please enter a correct value again.");
+
+            while (true) {
+                System.out.print(String.format("Enter the number of vertex from 0 to %d (inclusive) from which the edge originates: ", V-1));
+                try {
+                    from = sc.nextInt();
+                    if (from < 0 || from >= V) {
+                        throw new Exception("No. of vertex entered is invalid. Please enter a correct value again.");
+                    }
+                    break;
+                } catch (InputMismatchException ie) {
+                    System.out.println("Please enter numerical value only.");
+                    sc.nextLine();
+                    continue;
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                    continue;
                 }
-            } catch (InputMismatchException ie) {
-                System.out.println(ie.getMessage());
-                continue;
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-                continue;
             }
 
             System.out.println();
 
-            System.out.print(String.format("Enter the number of vertex from 0 to %d (inclusive) to which the edge connects: ", V-1));
-            try {
-                to = sc.nextInt();
-                if (to < 0 || to >= V) {
-                    throw new Exception("No. of vertex entered is invalid. Please enter a correct value again.");
+            while (true) {
+                System.out.print(String.format("Enter the number of vertex from 0 to %d (inclusive) to which the edge connects: ", V-1));
+                try {
+                    to = sc.nextInt();
+                    if (to < 0 || to >= V) {
+                        throw new Exception("No. of vertex entered is invalid. Please enter a correct value again.");
+                    } else if(to == from){
+                        throw new Exception("You entered same value for \"to\" as \"from\". " +
+                                "Thereby, you cannot have an edge connecting a node to itself. Please enter another value again.");
+                    }
+
+                    break;
+                } catch (InputMismatchException ie) {
+                    System.out.println("Please enter numerical value only.");
+                    sc.nextLine();
+                    continue;
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                    continue;
                 }
-            } catch (InputMismatchException ie) {
-                System.out.println(ie.getMessage());
-                continue;
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-                continue;
             }
 
             System.out.println();
 
-            System.out.print("Enter the capacity of edge: ");
-            try {
-                capacity = sc.nextDouble();
-                if (capacity < 0) {
-                    throw new Exception("Capacity entered is invalid. Please enter a correct value again.");
+            while (true) {
+                System.out.print("Enter the capacity of edge: ");
+                try {
+                    capacity = sc.nextDouble();
+                    if (capacity <= 0) {
+                        throw new Exception("Capacity entered is invalid. Please enter a correct value again.");
+                    }
+                    break;
+                } catch (InputMismatchException ie) {
+                    System.out.println("Please enter numerical value only.");
+                    sc.nextLine();
+                    continue;
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                    continue;
                 }
-            } catch (InputMismatchException ie) {
-                System.out.println(ie.getMessage());
-                continue;
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-                continue;
             }
 
             listOfEdges.add(new Edge(from, to, capacity));
