@@ -48,10 +48,8 @@ public class Application {
             } catch (InputMismatchException e) {
                 System.out.println("Please enter numerical value only.");
                 sc.nextLine();
-                continue;
             } catch (Exception e){
                 System.out.println(e.getMessage());
-                continue;
             }
         }while(V <= 0);
 
@@ -75,10 +73,8 @@ public class Application {
                 } catch (InputMismatchException ie) {
                     System.out.println("Please enter numerical value only.");
                     sc.nextLine();
-                    continue;
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
-                    continue;
                 }
             }
 
@@ -99,10 +95,8 @@ public class Application {
                 } catch (InputMismatchException ie) {
                     System.out.println("Please enter numerical value only.");
                     sc.nextLine();
-                    continue;
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
-                    continue;
                 }
             }
 
@@ -119,10 +113,8 @@ public class Application {
                 } catch (InputMismatchException ie) {
                     System.out.println("Please enter numerical value only.");
                     sc.nextLine();
-                    continue;
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
-                    continue;
                 }
             }
 
@@ -141,7 +133,6 @@ public class Application {
                     break;
                 default:
                     System.out.println("\n");
-                    continue;
             }
 
         }while (_continue);
@@ -182,7 +173,6 @@ public class Application {
                 new Dimension(vis.getGraphLayout().getSize()));
 
         File outputfile = new File(String.format("network_output\\%s_network_%s.png",title, new Date().toString().replaceAll("[\\:\\s]","").trim()));
-        outputfile.getParentFile().mkdirs();
 
         try {
             ImageIO.write(image, "png", outputfile);
