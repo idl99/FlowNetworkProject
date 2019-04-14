@@ -1,3 +1,7 @@
+/**
+ * W1673607 - 2016030 - IHAN DILNATH
+ */
+
 public class Edge {
 
     private final int from,to; // v is from, w is to
