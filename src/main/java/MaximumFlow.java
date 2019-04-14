@@ -9,7 +9,7 @@ public class MaximumFlow {
 
     public double of(Network network, int source, int sink){
         value = 0.0;
-        while(hasAugmentingPath(network,source,sink)){ // C - sum of capacity from all edge outgoing from source
+        while(hasAugmentingPath(network,source,sink)){
 
             double bottle_neck = Double.POSITIVE_INFINITY;
 
@@ -29,19 +29,22 @@ public class MaximumFlow {
     }
 
     private boolean hasAugmentingPath(Network network, int source, int sink){
+        
+        // Asymptotic complexity of O(V*E) as augmenting path is searched by iterating through all vertices and all edges
+        
         edgeTo = new Edge[network.getNoOfVertices()];
         visited = new boolean[network.getNoOfVertices()];
 
         List<Integer> queue = new LinkedList<>();
         queue.add(source);
         visited[source] = true;
-        while(!queue.isEmpty()){
+        while(!queue.isEmpty()){ // O(V) - Iterating through all the vertices
 
-            // Breadth first search algorithm O(V+E)
+            // Breadth first search algorithm
 
             int v = ((LinkedList<Integer>) queue).poll();
 
-            for(Edge edge: (network.getAdj())[v]){
+            for(Edge edge: (network.getAdj())[v]){ // O(E) Iterating through all edges
                 int w = edge.getOther(v);
                 if(edge.residualCapacityTo(w) > 0 && !visited[w]){
                     edgeTo[w] = edge;
