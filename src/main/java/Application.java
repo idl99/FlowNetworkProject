@@ -22,34 +22,10 @@ import java.util.Scanner;
 public class Application {
 
     public static void main(String[] args) {
-
-//        Edge zeroToOne = new Edge(0,1, 10);
-//        Edge zeroToThree = new Edge(0,3, 10);
-//        Edge oneToTwo = new Edge(1,2, 4);
-//        Edge oneToThree = new Edge(1,3, 2);
-//        Edge oneToFour = new Edge(1,4, 8);
-//        Edge twoToFive = new Edge(2,5, 10);
-//        Edge threeToFour = new Edge(3,4, 9);
-//        Edge fourToTwo = new Edge(4,2, 6);
-//        Edge fourToFive = new Edge(4,5,10);
-//
-//        Network network = new Network(6);
-//        network.addEdge(zeroToOne);
-//        network.addEdge(zeroToThree);
-//        network.addEdge(oneToTwo);
-//        network.addEdge(oneToThree);
-//        network.addEdge(oneToFour);
-//        network.addEdge(twoToFive);
-//        network.addEdge(threeToFour);
-//        network.addEdge(fourToTwo);
-//        network.addEdge(fourToFive);
-
         Network network = getUserInput();
-
         exportNetworkToFile(network, "before");
         System.out.println(String.format("Maximum flow of network is %.2f.", new MaximumFlow().of(network, 0, network.getNoOfVertices() - 1)));
         exportNetworkToFile(network, "after");
-
     }
 
     private static Network getUserInput() {
@@ -211,10 +187,9 @@ public class Application {
         try {
             ImageIO.write(image, "png", outputfile);
         } catch (IOException e) {
-            // Exception handling
+            e.printStackTrace();
+            System.out.println("Unable to write image to file. Please try again later");
         }
-
-
 
     }
 
