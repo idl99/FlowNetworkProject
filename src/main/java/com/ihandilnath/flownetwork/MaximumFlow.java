@@ -1,4 +1,4 @@
-/**
+package com.ihandilnath.flownetwork; /**
  * W1673607 - 2016030 - IHAN DILNATH
  */
 
@@ -33,9 +33,9 @@ public class MaximumFlow {
     }
 
     private boolean hasAugmentingPath(Network network, int source, int sink){
-        
+
         // Asymptotic complexity of O(V*E) as augmenting path is searched by iterating through all vertices and all edges
-        
+
         edgeTo = new Edge[network.getNoOfVertices()];
         visited = new boolean[network.getNoOfVertices()];
 

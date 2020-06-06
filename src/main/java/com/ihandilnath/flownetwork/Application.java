@@ -1,3 +1,5 @@
+package com.ihandilnath.flownetwork;
+
 import edu.uci.ics.jung.algorithms.layout.CircleLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
@@ -179,7 +181,7 @@ public class Application {
         File outputfile = new File(String.format("network_output\\%s_network_%s.png",title, new Date().toString().replaceAll("[\\:\\s]","").trim()));
         outputfile.getParentFile().mkdirs();
 
-        
+
         try {
             ImageIO.write(image, "png", outputfile);
         } catch (IOException e) {
