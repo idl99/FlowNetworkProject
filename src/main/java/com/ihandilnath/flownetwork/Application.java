@@ -15,11 +15,13 @@ import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.InputMismatchException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.List;
-import java.util.Scanner;
 
 /**
  * W1673607 - 2016030 - IHAN DILNATH
@@ -27,11 +29,42 @@ import java.util.Scanner;
 
 public class Application {
 
+    private static final Path OUTPUT_DIRECTORY = Paths.get("output");
+    private static final DateTimeFormatter OUTPUT_FILE_TIMESTAMP_FORMAT = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+
     public static void main(String[] args) {
-        Network network = getUserInput();
-        exportNetworkToFile(network, "before");
-        System.out.println(String.format("Maximum flow of network is %.2f.", new MaximumFlow().of(network, 0, network.getNoOfVertices() - 1)));
-        exportNetworkToFile(network, "after");
+
+        try {
+
+            // Get current timestamp to use for naming the output files
+            String timestamp = OUTPUT_FILE_TIMESTAMP_FORMAT.format(LocalDateTime.now());
+
+            createOutputDirectory();
+
+            Network network = getUserInput();
+
+            File inputNetworkFile = Files.createFile(Paths.get(OUTPUT_DIRECTORY.toString(), timestamp + "_input-network.png")).toFile();
+            exportNetworkToFile(network, inputNetworkFile);
+
+            System.out.println(String.format("Maximum flow of network is %.2f.", new MaximumFlow().of(network, 0, network.getNoOfVertices() - 1)));
+
+            File outputNetworkFile = Files.createFile(Paths.get(OUTPUT_DIRECTORY.toString(), timestamp + "_output_network.png")).toFile();
+            exportNetworkToFile(network, outputNetworkFile);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * This method creates the output directory if it doesn't exist
+     * @throws IOException
+     */
+    private static void createOutputDirectory() throws IOException {
+        boolean outputDirNotExist = !OUTPUT_DIRECTORY.toFile().exists();
+        if(outputDirNotExist) {
+            Files.createDirectory(Paths.get("output"));
+        }
     }
 
     private static Network getUserInput() {
@@ -152,7 +185,7 @@ public class Application {
 
     }
 
-    public static void exportNetworkToFile(Network network, String title){
+    public static void exportNetworkToFile(Network network, File file){
 
         Graph<Integer, Edge> graph = new DirectedSparseGraph<>();
 
@@ -178,12 +211,8 @@ public class Application {
                         vis.getGraphLayout().getSize().getHeight() / 2),
                 new Dimension(vis.getGraphLayout().getSize()));
 
-        File outputfile = new File(String.format("network_output\\%s_network_%s.png",title, new Date().toString().replaceAll("[\\:\\s]","").trim()));
-        outputfile.getParentFile().mkdirs();
-
-
         try {
-            ImageIO.write(image, "png", outputfile);
+            ImageIO.write(image, "png", file);
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("Unable to write image to file. Please try again later");
