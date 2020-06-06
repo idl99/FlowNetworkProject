@@ -23,10 +23,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.List;
 
-/**
- * W1673607 - 2016030 - IHAN DILNATH
- */
-
 public class Application {
 
     private static final Path OUTPUT_DIRECTORY = Paths.get("output");
@@ -41,13 +37,19 @@ public class Application {
 
             createOutputDirectory();
 
-            Network network = getUserInput();
+            Network network = fromCLIInput();
 
+            // Write visual graph representation of input network to file
             File inputNetworkFile = Files.createFile(Paths.get(OUTPUT_DIRECTORY.toString(), timestamp + "_input-network.png")).toFile();
             exportNetworkToFile(network, inputNetworkFile);
 
-            System.out.println(String.format("Maximum flow of network is %.2f.", new MaximumFlow().of(network, 0, network.getNoOfVertices() - 1)));
+            // Define the input parameters (source and sink) and compute Maximum flow
+            int sourceVertice = 0;
+            int sinkVertice = network.getNoOfVertices() - 1; // We deduct one from the number of vertices since the network input is zero-indexed
+            double maximumFlow = new MaximumFlow().of(network, sourceVertice, sinkVertice);
+            System.out.println(String.format("Maximum flow of network is %.2f.", maximumFlow));
 
+            // Write visual graph representation of maximum flow network to file
             File outputNetworkFile = Files.createFile(Paths.get(OUTPUT_DIRECTORY.toString(), timestamp + "_output_network.png")).toFile();
             exportNetworkToFile(network, outputNetworkFile);
 
@@ -67,13 +69,17 @@ public class Application {
         }
     }
 
-    private static Network getUserInput() {
+    /**
+     * This method gets user input from console and returns our representation of a Network
+     * @return
+     */
+    private static Network fromCLIInput() {
 
         Scanner sc = new Scanner(System.in);
         System.out.print("" +
                 "==================================================\n" +
-                "MAXIMUM FLOW NETWORK by Ihan Dilnath - W1673607\n" +
-                "5SENG002 - ALGORITHMS: THEORY, DESIGN AND IMPLEMENTATION\n" +
+                "MAXIMUM FLOW NETWORK using FORD-FULKERSON ALGORITHM\n" +
+                "==================================================\n" +
                 "\n");
 
         int V = 0;
@@ -185,6 +191,11 @@ public class Application {
 
     }
 
+    /**
+     * This method exports a visual graph representation of the network to a file
+     * @param network
+     * @param file
+     */
     public static void exportNetworkToFile(Network network, File file){
 
         Graph<Integer, Edge> graph = new DirectedSparseGraph<>();
