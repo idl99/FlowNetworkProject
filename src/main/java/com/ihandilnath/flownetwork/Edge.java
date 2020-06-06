@@ -1,13 +1,21 @@
 package com.ihandilnath.flownetwork;
 
 /**
- * W1673607 - 2016030 - IHAN DILNATH
+ * This class defines a POJO representation of an edge in a network
  */
-
 public class Edge {
 
-    private final int from,to; // v is from, w is to
+    // The vertice from which the edge connects
+    private final int from;
+
+    // The vertice to which the edge connects
+    private final int to;
+
+    // The capacity of the edge
     private final double capacity;
+
+    // The flow through the edge initialized to zero.
+    // Flow is computed when fed to the MaximumFlow#compute method
     private double flow;
 
     public Edge(int from, int to, double capacity) {
@@ -32,10 +40,11 @@ public class Edge {
         return flow;
     }
 
-    public void setFlow(double flow) {
-        this.flow = flow;
-    }
-
+    /**
+     * This method returns the other vertice associated in an edge
+     * @param arg
+     * @return
+     */
     public int getOther(int arg){
         if(arg == from){
             return to;
@@ -44,6 +53,11 @@ public class Edge {
         }
     }
 
+    /**
+     * This method computes the residual capacity to a vertex
+     * @param vertex
+     * @return
+     */
     public double residualCapacityTo(int vertex){
         if(vertex == from) // Backward edge
             return flow;
@@ -51,6 +65,11 @@ public class Edge {
             return capacity - flow;
     }
 
+    /**
+     * This method adds residual flow to an edge
+     * @param vertex
+     * @param delta
+     */
     public void addResidualFlowTo(int vertex, double delta){
         if(vertex == from)
             flow -= delta;

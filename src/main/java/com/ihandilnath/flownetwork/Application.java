@@ -46,7 +46,7 @@ public class Application {
             // Define the input parameters (source and sink) and compute Maximum flow
             int sourceVertice = 0;
             int sinkVertice = network.getNoOfVertices() - 1; // We deduct one from the number of vertices since the network input is zero-indexed
-            double maximumFlow = new MaximumFlow().of(network, sourceVertice, sinkVertice);
+            double maximumFlow = new MaximumFlow().compute(network, sourceVertice, sinkVertice);
             System.out.println(String.format("Maximum flow of network is %.2f.", maximumFlow));
 
             // Write visual graph representation of maximum flow network to file
